@@ -14,10 +14,20 @@ export const createServer = () => {
     },
 
     fetch(req, server) {
-      //* Identificar nuestros clientes
+      const cookies = new Bun.CookieMap(req.headers.get('cookie')!);
       const clientId = generateUuid();
+      const name = cookies.get('name')
+      const color = cookies.get('color') || 'gray';
+      const coords = cookies.get('coords')
+        ? JSON.parse(cookies.get('coords')!)
+        : null;
+
+      if (!name || !coords)
+        return new Response('Missing required cookies (name, coord)', { status: 400 });
+
+
       const upgraded = server.upgrade(req, {
-        data: { clientId },
+        data: { clientId, name, color, coords },
       });
 
       if (upgraded) {
