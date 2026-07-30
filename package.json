@@ -1,5 +1,5 @@
 {
-  "name": "bun-websocket-server",
+  "name": "socket-maps",
   "module": "index.ts",
   "type": "module",
   "private": true,
