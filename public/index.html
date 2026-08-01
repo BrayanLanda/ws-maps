@@ -40,6 +40,13 @@
       document.cookie = `color=${color}`;
       document.cookie = `coords=${JSON.stringify(coords)}`;
 
+      let message = {
+        type: 'GET_CLIENTS',
+        payload: {
+          
+        },
+      }
+
       let socket;
 
       const status = document.querySelector("#status");

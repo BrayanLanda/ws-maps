@@ -1,5 +1,6 @@
 import {
   messageSchema,
+  type ClientRegisterPayload,
   type MessageParsed,
 } from '../schemas/websocket-message.schema';
 import type { OutgoingWsMessage, } from '../types';
@@ -24,10 +25,22 @@ export const handleGetClients = (): HandlerResult => {
   };
 }
 
-export const handleClientRegister = (clientId: string, payload: MessageParsed['payload']): HandlerResult => {
+export const handleClientRegister = (clientId: string, payload: ClientRegisterPayload
+): HandlerResult => {
   return {
-    broadcast: [],
     personal: [],
+    broadcast: [
+      {
+        type: 'CLIENT_JOINED',
+        payload: {
+          clientId: clientId,
+          color: payload.color || 'gray',
+          name: payload.name,
+          coords: payload.coords,
+          updatedAt: Date.now(),
+        }
+      }
+    ],
   };
 }
 
@@ -39,9 +52,9 @@ export const handleClientMoved = (clientId: string, payload: MessageParsed['payl
 }
 
 //! General Handler o controlador general
-export const handleMessage = (message: string): HandlerResult => {
+export const handleMessage = (clientId: string, rawMessage: string): HandlerResult => {
   try {
-    const jsonData: unknown = JSON.parse(message);
+    const jsonData: unknown = JSON.parse(rawMessage);
     const parsedResult = messageSchema.safeParse(jsonData);
 
     if (!parsedResult.success) {
@@ -74,11 +87,11 @@ export const handleMessage = (message: string): HandlerResult => {
           broadcast: [],
           personal: [createErrorResponse(`Unknown message type: ${type}`)],
         };
-      }
-    } catch (error) {
-      return {
-        broadcast: [],
-        personal: [createErrorResponse(`Unknown error found`)],
-      }
     }
-  };
+  } catch (error) {
+    return {
+      broadcast: [],
+      personal: [createErrorResponse(`Unknown error found`)],
+    }
+  }
+};

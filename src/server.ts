@@ -41,7 +41,7 @@ export const createServer = () => {
         //! Una nueva conexión
         // console.log(`Cliente: ${ws.data.clientId}`);
         //! Suscribir el cliente a un canal por defecto
-        // ws.subscribe(SERVER_CONFIG.defaultChannelName);
+        ws.subscribe(SERVER_CONFIG.defaultChannelName);
         // ! (opcional) Aquí se puede emitir el primer mensaje al cliente
         // Emitir el primer mensaje al cliente que se acaba de conectar
         // ws.send({ type: 'my_type', payload: { message: 'Some Payload' } });
@@ -51,19 +51,15 @@ export const createServer = () => {
       message(ws, message: string) {
         //* Todos los mensajes que llegan al servidor de la misma forma
         // Se envía a un Handler General
-        const response = handleMessage(message);
+        const response = handleMessage(ws.data.clientId, message);
         const responseString = JSON.stringify(response);
 
-        //! Envía el mensaje al cliente que lo envió
-        if (response.type === 'ERROR') {
-          ws.send(responseString);
-          return;
+        for (const personalMessage of response.personal) {
+          ws.send(JSON.stringify(personalMessage));
         }
 
-        //! Si el mensaje es exclusivo del cliente que lo envió (No llamar el publish)
-        if (response.type === 'PERSONAL_RESPONSE_MESSAGE') {
-          ws.send(responseString);
-          return;
+        for (const broadcastMessage of response.broadcast) {
+          ws.publish(SERVER_CONFIG.defaultChannelName, JSON.stringify(broadcastMessage));
         }
 
         //! Si hay que enviar a todos los clientes conectados (publish + send)
