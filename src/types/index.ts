@@ -39,7 +39,7 @@ export type IncomingWsMessage =
     payload?: {}; //TODO: Agregar payload
   };
 
-export type OngoingWsMessage =
+export type OutgoingWsMessage =
   | {
     type: 'ERROR';
     payload: {
