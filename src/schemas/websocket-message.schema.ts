@@ -29,6 +29,6 @@ export const messageSchema = z.discriminatedUnion('type', [
 ]);
 
 export type MessageParsed = z.infer<typeof messageSchema>;
-export type ClientRegisterPayload = Extract<z.infer<MessageParsed>, { type: 'CLIENT_REGISTER' }>['payload'];
-export type ClientMovePayload = Extract<z.infer<MessageParsed>, { type: 'CLIENT_MOVE' }>['payload'];
-export type GetClientsPayload = Extract<z.infer<MessageParsed>, { type: 'GET_CLIENTS' }>['payload'];
+export type ClientRegisterPayload = Extract<MessageParsed, { type: 'CLIENT_REGISTER' }>['payload'];
+export type ClientMovePayload = Extract<MessageParsed, { type: 'CLIENT_MOVE' }>['payload'];
+export type GetClientsPayload = Extract<MessageParsed, { type: 'GET_CLIENTS' }>['payload'];

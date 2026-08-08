@@ -33,11 +33,13 @@ export const handleClientRegister = (clientId: string, payload: ClientRegisterPa
       {
         type: 'CLIENT_JOINED',
         payload: {
-          clientId: clientId,
-          color: payload.color || 'gray',
-          name: payload.name,
-          coords: payload.coords,
-          updatedAt: Date.now(),
+          client: {
+            clientId,
+            color: payload.color || 'gray',
+            name: payload.name,
+            coords: payload.coords,
+            updatedAt: Date.now(),
+          },
         }
       }
     ],
