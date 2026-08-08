@@ -19,13 +19,19 @@ export const messageSchema = z.discriminatedUnion('type', [
       coords: latLngSchema,
     })
   }),
-  z.object({
+  z.object({  
     type: z.literal('CLIENT_MOVE'),
     payload: z.object({
       clientId: z.string('Client ID is required').min(1),
       coords: latLngSchema,
     })
-  })
+  }),
+  z.object({
+    type: z.literal('CLIENT_LEFT'),
+    payload: z.object({
+      clientId: z.string('Client ID is required').min(1),
+    }),
+  }),
 ]);
 
 export type MessageParsed = z.infer<typeof messageSchema>;

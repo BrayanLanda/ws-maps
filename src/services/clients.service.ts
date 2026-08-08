@@ -50,4 +50,4 @@ class ClientService {
 
 
 
-export const clientService = new ClientService();
+export const clientsService = new ClientService();
